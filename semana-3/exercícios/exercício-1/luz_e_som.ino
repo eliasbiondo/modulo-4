@@ -114,7 +114,7 @@ void acender_leds(int numero_binario_inverso[4])
 
       case 0:
         digitalWrite(output[i], LOW);
-ç
+
     }
 
   }
