@@ -1,0 +1,167 @@
+:root {
+
+    font-size: 62.5%;
+
+}
+
+* {
+
+    margin: 0;
+    padding: 0;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    list-style-type: none;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+	color: white;
+
+}
+
+body {
+
+    width: 100vw;
+    height: 100vh;
+    padding: 4.5rem;
+    display: flex;
+	flex-direction: column;
+    align-items: center;
+    justify-content: center;
+	background-color: #1D1B20;
+
+}
+
+.page-title {
+
+	font-size: 4.8rem;
+	font-weight: 700;
+
+}
+
+.game {
+
+	display: flex;
+	align-items: center;
+	margin-top: 10rem;
+
+}
+
+.player {
+
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+
+}
+
+.player:first-child {
+
+	margin-right: 16rem;
+
+}
+
+.player:last-child {
+
+	margin-left: 16rem;
+
+}
+
+.player .name {
+
+	font-size: 4.8rem;
+	font-weight: 500;
+
+}
+
+.player .instruction {
+
+	font-size: 2.4rem;
+	font-weight: 300;
+	margin-top: 1.5rem;
+
+}
+
+.stats {
+
+	margin-top: 5rem;
+	width: 17rem;
+	height: 6rem;
+	background-color: #3B3840;
+	border-radius: 1.6rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.stats .desc {
+
+	font-size: 2.4rem;
+	font-weight: 700;
+
+}
+
+.cards {
+	
+	display: flex;
+	flex-direction: column;
+
+}
+
+.cards .row {
+
+	display: flex;
+	justify-content: center;
+
+}
+
+.card {
+
+	background-color: transparent;
+	width: 14.5rem;
+	height: 14.5rem;
+	border-radius: 3rem;
+	margin-right: 2rem;
+	margin-bottom: 2rem;
+
+}
+
+.flip {
+
+	position: relative;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	transition: transform 0.6s;
+	transform-style: preserve-3d;
+	border-radius: inherit;
+
+}
+
+.front, .back {
+
+	width: 100%;
+	height: 100%;
+	display: flex;
+	font-weight: 700;
+	font-size: 4.8rem;
+	position: absolute;
+	cursor: not-allowed;
+	align-items: center;
+	justify-content: center;
+	border-radius: inherit;
+	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+
+}
+
+.front {
+
+	background-color: #FF4572;
+
+}
+
+.back {
+
+	transform: rotateY(180deg);
+
+}
