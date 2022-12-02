@@ -2,7 +2,8 @@
 const MQTT_HOST = "broker.hivemq.com";
 const MQTT_PORT = 8000;
 const MQTT_CLIENT_ID = "558391cc-cecc-4d70-bd1d-731d17e7f7cf";
-const MQTT_TOPIC_TO_LISTEN = "JogoDaMemoria/TeclaPressionada";
+const MQTT_TOPIC_KEY_PRESSED = "JogoDaMemoria/TeclaPressionada";
+const MQTT_TOPIC_PLAY_BUZZER = "JogoDaMemoria/TocarBuzzer";
 
 // Mapping keys with cards.
 const keyMap = {
@@ -58,7 +59,7 @@ client.connect({
 function onConnect() {
 
 	// Subscribe to the target topic.
-	client.subscribe(MQTT_TOPIC_TO_LISTEN);
+	client.subscribe(MQTT_TOPIC_KEY_PRESSED);
 
 }
 
@@ -80,7 +81,7 @@ function onMessageArrived(message) {
 
 	
 	// When receiving a message from the target topic, flipping the card.
-	if(message.destinationName == MQTT_TOPIC_TO_LISTEN) {
+	if(message.destinationName == MQTT_TOPIC_KEY_PRESSED) {
 
 		flipCard(keyMap[message.payloadString]);
 
@@ -100,9 +101,26 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function playBuzzer(song) {
+
+	// Instancing a message to play the buzzer.
+	let playbuzzermsg = new Paho.MQTT.Message(song);
+			
+	// Setting the topic.
+	playbuzzermsg.destinationName = MQTT_TOPIC_PLAY_BUZZER;
+
+	// Sending the instancied message to play the buzzer.
+	client.send(playbuzzermsg);
+
+}
+
 function checkGameEnd() {
 
 	if(distributedPoints == 8) {
+
+		sleep(500);
+
+		playBuzzer("gameend");
 
 		if(playerScores["player1"][1] > playerScores["player2"][1]) {
 
@@ -117,6 +135,9 @@ function checkGameEnd() {
 			alert("Empate!");
 
 		}
+
+
+		location.reload();
 
 
 	}
@@ -220,6 +241,48 @@ function flipCard(id) {
 
 }
 
+function shuffle(matchingCards) {
+
+	let counter = 0;
+
+	let unavailablePositions = [];
+
+	while(unavailablePositions.length != 16) {
+
+		let quantityOfGeneratedNumbers = 0;
+
+		while(quantityOfGeneratedNumbers != 2) {
+
+			generatedNumber = Math.floor(Math.random() * 16) + 1;
+	
+			if(!unavailablePositions.includes(generatedNumber)) {
+	
+				unavailablePositions.push(generatedNumber);
+
+				quantityOfGeneratedNumbers++;
+
+				if(quantityOfGeneratedNumbers == 1) {
+
+					matchingCards[counter].positions[0] =  generatedNumber;
+
+				} else if (quantityOfGeneratedNumbers == 2) {
+
+					matchingCards[counter].positions[1] =  generatedNumber;
+
+				}
+				
+	
+			}
+
+	
+		}
+
+		counter++;
+
+	}
+
+}
+
 
 // Matching cards.
 let matchingCards = [
@@ -272,6 +335,8 @@ let matchingCards = [
 	
 	}
 ]
+
+shuffle(matchingCards);
 
 
 // Mapping the cards with the images and its matching codes.
