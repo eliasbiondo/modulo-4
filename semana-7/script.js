@@ -438,22 +438,25 @@ async function checkGameOver() {
 		// If the first player's score is greater than the second player's score...
 		if(game.players[1].score > game.players[2].score) {
 
+			// Alerting the first player's victory.
 			alert(`🎉 Congratulations ${game.players[1].name}! You won the game!`);
 
 		} else if(game.players[2].score > game.players[1].score) {
 
+			// Alerting the second player's victory.
 			alert(`🎉 Congratulations ${game.players[2].name}! You won the game!`);
 
 
 		} else {
 
+			// Alerting a draw.
 			alert("🤝 It's a tie!");
 
 		}
 
 
+		// Reloading the page.
 		location.reload();
-
 
 	}
 
