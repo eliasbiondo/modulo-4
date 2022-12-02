@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Jogo da Memória</title>
+	<title>Memory Game</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -14,15 +14,15 @@
 <body>
 
 	<!-- Page's main title -->
-	<p class="page-title">Jogo da Memória</p>
+	<p class="game-title" id="title"></p>
 
 	<!-- Game's main container -->
 	<div class="game">
 
 		<!-- Game's first player stats container -->
 		<div class="player" id="player-1">
-			<p class="name">Jogador 1</p>
-			<p class="instruction">Sua vez</p>
+			<p class="name"></p>
+			<p class="instruction"></p>
 			<div class="stats">
 				<span class="desc"><span id="player1-score">0</span> pontos</span>
 			</div>
@@ -271,8 +271,8 @@
 
 		<!-- Game's second player stats container -->
 		<div class="player" id="player-2">
-			<p class="name">Jogador 2</p>
-			<p class="instruction">Aguarde...</p>
+			<p class="name"></p>
+			<p class="instruction"></p>
 			<div class="stats">
 				<span class="desc"><span id="player2-score">0</span> pontos</span>
 			</div>

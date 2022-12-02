@@ -62,14 +62,14 @@ const game = {
 		// Defining player 1.
 		1: {
 			score: 0, // Player 1 score.
-			name: "Jogador 1", // Player 1 name.
+			name: window.prompt("Type the name of the first player:"), // Player 1 name.
 			domElement: document.querySelector("#player-1"), // Player 1 DOM element.
 		},
 
 		// Defining player 2.
 		2: {
 			score: 0, // Player 2 score.
-			name: "Jogador 2", // Player 2 name.
+			name: window.prompt("Type the name of the second player:"), // Player 2 name.
 			domElement: document.querySelector("#player-2"), // Player 2 DOM element.
 		}
 	
@@ -178,6 +178,9 @@ function setupGame() {
 	// Connecting to the server.
 	client.connect(onConnectHandler);
 
+	// Setting up the game title.
+	document.querySelector("#title").innerHTML = game.constants.title;
+
 	// Setting up the game's players and their scores.
 	for(let player in game.players) {
 
@@ -205,103 +208,121 @@ function setupGame() {
 // Instancing a function to shuffle the cards.
 function shuffle(matchingCards) {
 
-	let counter = 0;
+	// Instancing a variable to store the quantity of shuffled cards.
+	let quantityOfShuffledImages = 0;
 
+	// Instancing a variable to store the unavauilable positions.
 	let unavailablePositions = [];
 
-	while(unavailablePositions.length != 16) {
+	// While the quantity of shuffled images is less than the quantity of images.
+	while(quantityOfShuffledImages != 8) {
 
-		let quantityOfGeneratedNumbers = 0;
+		// Instancing a variable to store the quantity of generated random numbers.
+		let quantityOfGeneratedRandomNumbers = 0;
 
-		while(quantityOfGeneratedNumbers != 2) {
+		// While the quantity of generated random numbers is less than a pair of cards.
+		while(quantityOfGeneratedRandomNumbers != 2) {
 
-			generatedNumber = Math.floor(Math.random() * 16) + 1;
+			// Instancing a variable to store the generated random number.
+			let generatedNumber = Math.floor(Math.random() * 16) + 1;
 	
+			// If the generated random number is not in the unavailable positions array.
 			if(!unavailablePositions.includes(generatedNumber)) {
 	
+				// Adding the generated random number to the unavailable positions array.
 				unavailablePositions.push(generatedNumber);
 
-				quantityOfGeneratedNumbers++;
+				// Adding the quantity of generated random numbers by one.
+				quantityOfGeneratedRandomNumbers++;
 
-				if(quantityOfGeneratedNumbers == 1) {
+				// Setting the card position to the generated random number.
+				matchingCards[quantityOfShuffledImages].positions[quantityOfGeneratedRandomNumbers - 1] =  generatedNumber;
 
-					matchingCards[counter].positions[0] =  generatedNumber;
-
-				} else if (quantityOfGeneratedNumbers == 2) {
-
-					matchingCards[counter].positions[1] =  generatedNumber;
-
-				}
-				
 	
 			}
 
 	
 		}
 
-		counter++;
+		// Adding the quantity of shuffled images by one.
+		quantityOfShuffledImages++;
 
 	}
 
 }
 
 // Instancing a function to map the cards.
-function mapCards(matchingCards) { 
+function mapCards(matchingCards) {
 
-	// Mapping the cards with the images and its matching codes.
-	for(let i = 0; i < (game.cards.length); i++) {
+	// Instancing a variable to store the quantity of mapped cards.
+	let quantityOfPairOfCardsMapped = 0;
 
-		if(i < 8) {
+	// While the quantity of pair of cards mapped is less than the quantity of pair of cards...
+	while(quantityOfPairOfCardsMapped != 8) {
 
-			for(let j = 0; j < matchingCards[i].positions.length; j++) {
+		// Instancing a variable to store the quantity of cards of the pair mapped.
+		let quantityOfCardsOfThePairMapped = 0;
+
+		// Mapping the pair of cards...
+		while(quantityOfCardsOfThePairMapped != 2) {
 			
-				game.cards[matchingCards[i].positions[0]-1].children[0].children[1].children[0].src = matchingCards[i].imagePath;
-				game.cards[matchingCards[i].positions[0]-1].setAttribute('character', matchingCards[i].positions[0]);
-				game.cards[matchingCards[i].positions[1]-1].children[0].children[1].children[0].src = matchingCards[i].imagePath;
-				game.cards[matchingCards[i].positions[1]-1].setAttribute('character', matchingCards[i].positions[0]);
+			// Instancing a variable to store the target card.
+			let card = game.cards[matchingCards[quantityOfPairOfCardsMapped].positions[quantityOfCardsOfThePairMapped]-1];
 
-			}
-			
+			// Setting the card's image.
+			card.children[0].children[1].children[0].src = matchingCards[quantityOfPairOfCardsMapped].imagePath;
+
+			// Setting the card's character id.
+			card.setAttribute('character', quantityOfPairOfCardsMapped);
+
+			// Adding the quantity of cards of the pair mapped by one.
+			quantityOfCardsOfThePairMapped++;
 
 		}
 
-	} 
+		// Adding the quantity of pair of cards mapped by one.
+		quantityOfPairOfCardsMapped++;
+
+	}
+
 
 }
 
 // Instancing a function to flip a card.
-function flipCard(id) {
+function flipCard(card) {
 
+	// Defining the card to be flipped.
+	let cardToFlip = game.cards[card-1];
+
+	// If the game is on a sleep time return.
 	if(game.isOnASleepTime) return;
 
-	if(game.cards[id - 1].getAttribute("isAvailable") == "false") return;
+	// If the card is already flipped return.
+	if(cardToFlip.getAttribute("isAvailable") == "false") return;
 
 	// Flipping the card according to the current card degree.
-	if(game.cards[id-1].children[0].style.transform == "rotateY(180deg)") {
+	if(cardToFlip.children[0].style.transform == "rotateY(180deg)") {
 
-		// Removing the card from the opened cards array.
-		game.openCards = game.openCards.filter(item => item !== id);
-
-		// Flipping the card.
-		game.cards[id-1].children[0].style.transform = "rotateY(0deg)";
+		// If the card is already flipped, alerting a message.
+		window.alert("👀 You can't flip the same card twice!");
 
 	} else {
 
 		// Adding the card to the opened cards array.
-		game.openCards.push(id);
+		game.openCards.push(card);
 
 		// Flipping the card.
-		game.cards[id-1].children[0].style.transform = "rotateY(180deg)";
+		cardToFlip.children[0].style.transform = "rotateY(180deg)";
 
 	}
 
+	// If the quantity of opened cards is equal to two...
 	if(game.openCards.length == 2) {
 
+		// Checking cards.
 		checkCards();
 
 	}
-
-	return 0;
 
 }
 
@@ -309,31 +330,33 @@ function flipCard(id) {
 async function checkCards() {
 
 	// Getting all opened cards.
-	let firstOpenedCard = game.cards[game.openCards[0] - 1];
-	let secondOpenedCard = game.cards[game.openCards[1] - 1];
+	let firstOpenedCard = game.cards[game.openCards[0]-1];
+	let secondOpenedCard = game.cards[game.openCards[1]-1];
 
+	// Setting the game to be on a sleep time to avoid the user to flip more than two cards.
 	game.isOnASleepTime = true;
 
 	// Sleeping for 1 second.
 	await sleep(1000);
 
+	// Setting the game to be not on a sleep time.
 	game.isOnASleepTime = false;
 
 	// Checking if the image inside the card is the same.
 	if(firstOpenedCard.getAttribute("character") == secondOpenedCard.getAttribute("character")) {
 
+		// Adding the quantity of distributed points by one.
+		game.distributedPoints++;
+
+		// Setting the cards to be unavailable.
 		firstOpenedCard.setAttribute("isAvailable", "false");
 		secondOpenedCard.setAttribute("isAvailable", "false");
 
-		// If the images are the same, adding 1 to the current player's score.
-		game.distributedPoints++;
-
-
+		// Adding the score of the player by one.
 		game.players[game.whoseTurnIsIt].score += 1;
-
 		game.players[game.whoseTurnIsIt].domElement.children[2].children[0].children[0].innerHTML = game.players[game.whoseTurnIsIt].score;
 
-		// Emptying the opened cards array.
+		// Emptying the open cards array.
 		game.openCards.length = 0;
 
 		// Checking if the game has ended.
@@ -345,31 +368,44 @@ async function checkCards() {
 		// If the images are different, flipping the cards back.
 		closeCards(game.openCards[0], game.openCards[1]);
 		
+		// Emptying the open cards array.
 		game.openCards = [];
 
-		if(game.whoseTurnIsIt == 1) {
-
-			document.querySelector("#player-1").children[1].innerHTML = game.constants.waiting;
-			game.whoseTurnIsIt = 2;
-			document.querySelector("#player-2").children[1].innerHTML = game.constants.yourTurn;
-			
-		} else {
-			
-			document.querySelector("#player-2").children[1].innerHTML = game.constants.waiting;
-			game.whoseTurnIsIt = 1;
-			document.querySelector("#player-1").children[1].innerHTML = game.constants.yourTurn;
-
-		}
+		// Changing the turn.
+		changeTurn();
 
 	}
 
 }
 
 // Instancing a function to close a pair of cards.
-function closeCards(id1, id2) {
+function closeCards(firstCard, secondCard) {
 
-		game.cards[id1 - 1].children[0].style.transform = "rotateY(0deg)";
-		game.cards[id2 - 1].children[0].style.transform = "rotateY(0deg)";
+	// Closing the cards.
+	game.cards[firstCard - 1].children[0].style.transform = "rotateY(0deg)";
+	game.cards[secondCard - 1].children[0].style.transform = "rotateY(0deg)";
+
+}
+
+// Instancing a function to change the turn.
+function changeTurn() {
+
+	// If the current turn is the first player's turn...
+	if(game.whoseTurnIsIt == 1) {
+
+		// Setting the current turn to be the second player's turn.
+		document.querySelector("#player-1").children[1].innerHTML = game.constants.waiting;
+		game.whoseTurnIsIt = 2;
+		document.querySelector("#player-2").children[1].innerHTML = game.constants.yourTurn;
+		
+	} else {
+		
+		// Setting the current turn to be the first player's turn.
+		document.querySelector("#player-2").children[1].innerHTML = game.constants.waiting;
+		game.whoseTurnIsIt = 1;
+		document.querySelector("#player-1").children[1].innerHTML = game.constants.yourTurn;
+
+	}
 
 }
 
@@ -388,25 +424,30 @@ function playBuzzer(song) {
 }
 
 // Instancing a function to check if the game is over.
-function checkGameOver() {
+async function checkGameOver() {
 
+	// If the quantity of distributed points is equal to eight...
 	if(game.distributedPoints == 8) {
 
-		sleep(500);
+		// Sleeping for 1 second.
+		await sleep(500);
 
-		playBuzzer("gameend");
+		// Playing the buzzer.
+		playBuzzer("gameover");
 
+		// If the first player's score is greater than the second player's score...
 		if(game.players[1].score > game.players[2].score) {
 
-			alert("O jogador 1 venceu!");
+			alert(`🎉 Congratulations ${game.players[1].name}! You won the game!`);
 
 		} else if(game.players[2].score > game.players[1].score) {
 
-			alert("O jogador 2 venceu!");
+			alert(`🎉 Congratulations ${game.players[2].name}! You won the game!`);
+
 
 		} else {
 
-			alert("Empate!");
+			alert("🤝 It's a tie!");
 
 		}
 
